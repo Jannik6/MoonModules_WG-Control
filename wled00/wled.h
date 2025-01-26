@@ -457,9 +457,21 @@ WLED_GLOBAL bool arlsForceMaxBri _INIT(false);                    // enable to f
 WLED_GLOBAL uint16_t e131ProxyUniverse _INIT(0);                  // output this E1.31 (sACN) / ArtNet universe via MAX485 (0 = disabled)
 #endif
 #ifdef WLED_ENABLE_DMX_INPUT
-  WLED_GLOBAL int dmxInputTransmitPin _INIT(0);
-  WLED_GLOBAL int dmxInputReceivePin _INIT(0);
-  WLED_GLOBAL int dmxInputEnablePin _INIT(0);
+  #ifndef DMXIN_TXPIN   // DI
+    WLED_GLOBAL int dmxInputTransmitPin _INIT(0);
+  #else
+    WLED_GLOBAL int dmxInputTransmitPin _INIT(DMXIN_TXPIN);
+  #endif
+  #ifndef DMXIN_RXPIN   // RO
+    WLED_GLOBAL int dmxInputReceivePin _INIT(0);
+  #else
+    WLED_GLOBAL int dmxInputReceivePin _INIT(DMXIN_RXPIN);
+  #endif
+  #ifndef DMXIN_ENPIN   // DE+RE
+    WLED_GLOBAL int dmxInputEnablePin _INIT(0);
+  #else
+    WLED_GLOBAL int dmxInputEnablePin _INIT(DMXIN_ENPIN);
+  #endif
   WLED_GLOBAL int dmxInputPort _INIT(2);
   WLED_GLOBAL DMXInput dmxInput;
 #endif
