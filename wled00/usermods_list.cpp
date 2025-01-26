@@ -19,6 +19,10 @@
 #include "../usermods/Temperature/usermod_temperature.h"
 #endif
 
+#ifdef USERMOD_DIPSWITCH
+#include "../usermods/usermod_v2_dip-switch/usermod_v2_dip-switch.h"
+#endif
+
 #ifdef USERMOD_SHT
 #include "../usermods/sht/usermod_sht.h"
 #endif
@@ -221,6 +225,10 @@ void registerUsermods()
 
 #ifdef USERMOD_DALLASTEMPERATURE
   usermods.add(new UsermodTemperature("Temperature", true));
+#endif
+
+#ifdef USERMOD_DIPSWITCH
+  usermods.add(new DIPSwitchUsermod("DIP-Switch", true));
 #endif
 
 #ifdef USERMOD_SN_PHOTORESISTOR
