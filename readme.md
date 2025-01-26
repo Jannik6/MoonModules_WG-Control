@@ -1,3 +1,24 @@
+# WG-Control
+
+WG-Control is a WLED-Controller designed and sold by [Event WG - Wicknus & Gromoll GbR](https://www.event-wg.com).
+
+It features:
+- 5V - 24V input voltage range (Select according to used LED-Strip voltage)
+- 5x20 Fuse holder
+- DMX512 input using XLR connectors (1* M, 1* F for IN/OUT)
+- WLED recommended SN74AHCT125 Level shifter for the LED-Output
+- Embedded ICS-43434 I2S digital microphone for Sound reactive
+- TSOP38238 IR-Receiver
+- 10 DIP-Switches to select between DMX and Presets (10) and therefore selecting start-address or number (1-9)
+- Original WAGO 2604-1105 connector for Power-IN and Power-OUT+Data for the LED-Strip (optionally)
+- 6 additional GPIO pins
+- 2 Status LEDs for 5V and 3V3
+- Reset button
+
+### WG-Control is currently in a development-state - Please contact to buy a PCB: [support@event-wg.com](mailto:support@event-wg.com)
+
+***
+
 <p align="center">
   <img src="/images/wled_logo_akemi.png">
   <a href="https://github.com/MoonModules/WLED/releases"><img src="https://img.shields.io/github/release/MoonModules/WLED.svg?style=flat-square"></a>
