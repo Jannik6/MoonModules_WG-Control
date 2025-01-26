@@ -17,6 +17,8 @@ It features:
 
 ### WG-Control is currently in a development-state - Please contact to buy a PCB: [support@event-wg.com](mailto:support@event-wg.com)
 
+<img src="/images/WG-Control.jpg">
+
 ***
 
 <p align="center">
