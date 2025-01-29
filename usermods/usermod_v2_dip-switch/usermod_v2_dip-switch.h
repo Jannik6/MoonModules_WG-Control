@@ -19,6 +19,7 @@ class DIPSwitchUsermod : public Usermod {
     bool initDone = false;
     int next_input = 0;
     int dmx_mode = 1;                 // Switch between selecting DMX-Address or Preset-Selection
+    int8_t lastPreset = 0;
 
     // Helper function to read DIP switch values using the multiplexer
     void updateDMX_start_Address() {
@@ -36,13 +37,17 @@ class DIPSwitchUsermod : public Usermod {
           dmx_mode = state;
         } else {
           if (dmx_mode == 0){
-            int old = currentPreset;
+            lastPreset = currentPreset;
             if (state == LOW) {
               currentPreset |= (1 << (9 - next_input));
             } else {
               currentPreset &= ~(1 << (9 - next_input));
             }
-            if (old != currentPreset) colorUpdated(CALL_MODE_FX_CHANGED);
+            if (lastPreset != currentPreset){
+              applyPreset(currentPreset);
+              colorUpdated(CALL_MODE_FX_CHANGED);
+            } 
+              
           } else {
             if (state == LOW) {
               DMXAddress |= (1 << (9 - next_input));
