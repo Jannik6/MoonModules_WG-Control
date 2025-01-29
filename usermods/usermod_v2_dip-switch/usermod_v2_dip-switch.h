@@ -49,11 +49,10 @@ class DIPSwitchUsermod : public Usermod {
             } 
               
           } else {
-            if (state == LOW) {
-              DMXAddress |= (1 << (9 - next_input));
-            } else {
-              DMXAddress &= ~(1 << (9 - next_input));
-            }
+            DMXAddress = (state == LOW) ? (DMXAddress | (1 << (9 - next_input))) 
+                            : (DMXAddress & ~(1 << (9 - next_input)));
+
+            DMXAddress = DMXAddress ? DMXAddress : 1;
           }
         }
       #else
