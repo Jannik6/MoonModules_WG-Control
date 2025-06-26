@@ -416,7 +416,7 @@ WLED_GLOBAL byte buttonType[WLED_MAX_BUTTONS]  _INIT({BTN_TYPE_PUSH});
 #if defined(IRTYPE) && defined(IRPIN)
 WLED_GLOBAL byte irEnabled      _INIT(IRTYPE); // Infrared receiver
 #else
-WLED_GLOBAL byte irEnabled      _INIT(0);     // Infrared receiver disabled
+WLED_GLOBAL byte irEnabled      _INIT(8);     // Default to JSON-remote
 #endif
 WLED_GLOBAL bool irApplyToAllSelected _INIT(true); //apply IR to all selected segments
 

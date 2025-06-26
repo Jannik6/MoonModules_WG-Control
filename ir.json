@@ -1,0 +1,135 @@
+{
+  "remote": "wgcontrol-ir",
+  "0xFFA25D": {
+    "label": "Effect+",
+    "pos": "1x1",
+    "cmd": "FX=~"
+  },
+  "0xFF629D": {
+    "label": "MusicFX",
+    "pos": "1x2",
+    "cmd": "FX=138"
+  },
+  "0xFFE21D": {
+    "label": "On/Off",
+    "pos": "1x3",
+    "cmd": "T=2"
+  },
+  "0xFF22DD": {
+    "label": "Bright-",
+    "pos": "2x1",
+    "cmd": "!decBrightness"
+  },
+  "0xFF02FD": {
+    "label": "Pause",
+    "pos": "2x2",
+    "cmd": "SX=0"
+  },
+  "0xFFC23D": {
+    "label": "Bright+",
+    "pos": "2x3",
+    "cmd": "!incBrightness"
+  },
+  "0xFFE01F": {
+    "label": "A",
+    "pos": "3x1",
+    "cmnt": "Preset 1 or Blends",
+    "cmd": "!presetFallback",
+    "PL": 1,
+    "FX": 115,
+    "FP": 10
+  },
+  "0xFFA857": {
+    "label": "B",
+    "pos": "3x2",
+    "cmnt": "Preset 2 or Rainbow",
+    "cmd": "!presetFallback",
+    "PL": 2,
+    "FX": 9,
+    "FP": 10
+  },
+  "0xFF906F": {
+    "label": "C",
+    "pos": "3x3",
+    "cmnt": "Preset 3 or Colorloop",
+    "cmd": "!presetFallback",
+    "PL": 3,
+    "FX": 8,
+    "FP": 10
+  },
+  "0xFF6897": {
+    "label": "1",
+    "pos": "4x1",
+    "cmnt": "Lava",
+    "cmd": "FP=8&CL=hFF0000&C2=hFF7F00&C3=hCC3D60"
+  },
+  "0xFF9867": {
+    "label": "2",
+    "pos": "4x2",
+    "cmnt": "Rivendale",
+    "cmd": "FP=14&CL=h2E8B57&C2=h2E8B85&C3=h3B6F45"
+  },
+  "0xFFB04F": {
+    "label": "3",
+    "pos": "4x3",
+    "cmnt": "Breeze",
+    "cmd": "FP=15&CL=hFF&C2=h7F00FF&C3=h3D60CC"
+  },
+
+  "0xFF30CF": {
+    "label": "4",
+    "pos": "5x1",
+    "cmnt": "Orangery",
+    "cmd": "FP=47&CL=hFFA500&C2=hD9FF00&C3=hCC753D"
+  },
+  "0xFF18E7": {
+    "label": "5",
+    "pos": "5x2",
+    "cmnt": "Breeze",
+    "cmd": "FP=15&CL=h8B&C2=h45008B&C3=h21346F"    
+  },
+  "0xFF7A85": {
+    "label": "6",
+    "pos": "5x3",
+    "cmnt": "White",
+    "cmd": "FP=5&CL=hFFFFFF&C2=hFFE4CD&C3=hE4E4FF"
+  },
+
+  "0xFF10EF": {
+    "label": "7",
+    "pos": "6x1",
+    "cmnt": "Plum",
+    "cmd": "FP=5&CL=hDDA0DD&C2=hDDA0BE&C3=hA88EB0"
+  },
+  "0xFF38C7": {
+    "label": "8",
+    "pos": "6x2",
+    "cmnt": "Orchid",
+    "cmd": "FP=5&CL=hDA70D6&C2=hDA70A0&C3=hA173AE"
+  },
+  "0xFF5AA5": {
+    "label": "9",
+    "pos": "6x3",
+    "cmnt": "Yellowout",
+    "cmd": "FP=17&CL=hFFFF00&C2=h7FFF00&C3=hCCA83D"
+  },
+
+  "0xFF42BD": {
+    "label": "0",
+    "pos": "7x1",
+    "cmnt": "Orange and Teal",
+    "cmd": "FP=44&CL=h6400&C2=h6432&C3=h265018"
+  },
+  "0xFF4AB5": {
+    "label": "-/--",
+    "pos": "7x2",
+    "cmnt": "Aurora",
+    "cmd": "FP=37&CL=h9ACD32&C2=h4CCD32&C3=h9DA44D"
+  },
+  "0xFF52AD": {
+    "label": "<-",
+    "pos": "7x3",
+    "cmnt": "Toggle preset cycle",
+    "cmd": "CY=2&PT=60000"
+  }
+}
