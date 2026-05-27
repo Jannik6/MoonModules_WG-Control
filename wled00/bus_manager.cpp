@@ -146,6 +146,7 @@ BusDigital::BusDigital(BusConfig &bc, uint8_t nr, const ColorOrderMap &com) : Bu
   if (_iType == I_NONE) return;
   uint16_t lenToCreate = _len;
   if (bc.type == TYPE_WS2812_1CH_X3) lenToCreate = NUM_ICS_WS2812_1CH_3X(_len); // only needs a third of "RGB" LEDs for NeoPixelBus 
+  else if (bc.type == TYPE_GOVEE_BULB_CCT || bc.type == TYPE_GOVEE_BULB_WW) lenToCreate = _len * 2; // each logical pixel is 2 physical ICs: GRB + CCT/WW
   _busPtr = PolyBus::create(_iType, _pins, lenToCreate, nr, _frequencykHz);
   _valid = (_busPtr != nullptr);
   _colorOrder = bc.colorOrder;
@@ -187,11 +188,55 @@ void BusDigital::setStatusPixel(uint32_t c) {
 }
 
 void IRAM_ATTR BusDigital::setPixelColor(uint16_t pix, uint32_t c) {
-  if (_type == TYPE_SK6812_RGBW || _type == TYPE_TM1814 || _type == TYPE_WS2812_1CH_X3) c = autoWhiteCalc(c);
+  if (_type == TYPE_SK6812_RGBW || _type == TYPE_TM1814 || _type == TYPE_WS2812_1CH_X3 || _type == TYPE_GOVEE_BULB_CCT || _type == TYPE_GOVEE_BULB_WW) c = autoWhiteCalc(c);
   if (_cct >= 1900) c = colorBalanceFromKelvin(_cct, c); //color correction from CCT
   if (reversed) pix = _len - pix -1;
   else pix += _skip;
   uint8_t co = _colorOrderMap.getPixelColorOrder(pix+_start, _colorOrder);
+  if (_type == TYPE_GOVEE_BULB_CCT || _type == TYPE_GOVEE_BULB_WW) {
+    const uint16_t rgbPix = pix * 2;
+    const uint16_t secPix = rgbPix + 1;
+    const uint8_t r = R(c);
+    const uint8_t g = G(c);
+    const uint8_t b = B(c);
+    const uint8_t w = W(c);
+
+    // First IC: regular RGB chip.
+    PolyBus::setPixelColor(_busPtr, _iType, rgbPix, RGBW32(r, g, b, 0), co);
+
+    if (_type == TYPE_GOVEE_BULB_CCT) {
+      // Second IC: CCT chip encoded as WW (R), CW (G)
+      uint8_t cct = 0;
+      if (_cct > -1) {
+        if (_cct >= 1900)    cct = (_cct - 1900) >> 5;
+        else if (_cct < 256) cct = _cct;
+      } else {
+        cct = (approximateKelvinFromRGB(c) - 1900) >> 5;
+      }
+
+      uint8_t ww, cw;
+      #ifdef WLED_USE_IC_CCT
+      ww = w;
+      cw = cct;
+      #else
+      if (cct       < _cctBlend) ww = 255;
+      else ww = ((255-cct) * 255) / (255 - _cctBlend);
+
+      if ((255-cct) < _cctBlend) cw = 255;
+      else                       cw = (cct * 255) / (255 - _cctBlend);
+
+      ww = (w * ww) / 255;
+      cw = (w * cw) / 255;
+      #endif
+
+      PolyBus::setPixelColor(_busPtr, _iType, secPix, RGBW32(ww, cw, 0, 0), COL_ORDER_RGB);
+    } else {
+      // WW variant: second IC is warm white only - place in R channel
+      uint8_t ww = w;
+      PolyBus::setPixelColor(_busPtr, _iType, secPix, RGBW32(ww, 0, 0, 0), COL_ORDER_RGB);
+    }
+    return;
+  }
   if (_type == TYPE_WS2812_1CH_X3) { // map to correct IC, each controls 3 LEDs
     uint16_t pOld = pix;
     pix = IC_INDEX_WS2812_1CH_3X(pix);
@@ -209,6 +254,25 @@ uint32_t IRAM_ATTR_YN BusDigital::getPixelColor(uint16_t pix) const {
   if (reversed) pix = _len - pix -1;
   else pix += _skip;
   uint8_t co = _colorOrderMap.getPixelColorOrder(pix+_start, _colorOrder);
+  if (_type == TYPE_GOVEE_BULB_CCT || _type == TYPE_GOVEE_BULB_WW) {
+    const uint16_t rgbPix = pix * 2;
+    const uint16_t secPix = rgbPix + 1;
+    const uint32_t cRgb = PolyBus::getPixelColor(_busPtr, _iType, rgbPix, co);
+    const uint32_t cSec = PolyBus::getPixelColor(_busPtr, _iType, secPix, COL_ORDER_RGB);
+    uint16_t w = 0;
+    if (_type == TYPE_GOVEE_BULB_CCT) {
+      #ifdef WLED_USE_IC_CCT
+      w = R(cSec);
+      #else
+      w = R(cSec) + G(cSec);
+      if (w > 255) w = 255;
+      #endif
+    } else {
+      // WW variant stores warm white in R channel
+      w = R(cSec);
+    }
+    return RGBW32(R(cRgb), G(cRgb), B(cRgb), uint8_t(w));
+  }
   if (_type == TYPE_WS2812_1CH_X3) { // map to correct IC, each controls 3 LEDs
     uint16_t pOld = pix;
     pix = IC_INDEX_WS2812_1CH_3X(pix);
@@ -1221,6 +1285,7 @@ uint32_t BusManager::memUsage(BusConfig &bc) {
   uint8_t type = bc.type;
   uint16_t len = bc.count + bc.skipAmount;
   if (type > 15 && type < 32) { // digital types
+    if (type == TYPE_GOVEE_BULB_CCT || type == TYPE_GOVEE_BULB_WW) len *= 2; // 2 physical ICs per logical pixel
     if (type == TYPE_UCS8903 || type == TYPE_UCS8904) len *= 2; // 16-bit LEDs
     #ifdef ESP8266
       if (bc.pins[0] == 3) { //8266 DMA uses 5x the mem

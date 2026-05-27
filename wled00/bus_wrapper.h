@@ -1179,6 +1179,8 @@ class PolyBus {
       switch (busType) {
         case TYPE_WS2812_1CH_X3:
         case TYPE_WS2812_2CH_X3:
+        case TYPE_GOVEE_BULB_CCT:
+        case TYPE_GOVEE_BULB_WW:
         case TYPE_WS2812_RGB:
         case TYPE_WS2812_WWA:
           return I_8266_U0_NEO_3 + offset;
@@ -1236,6 +1238,8 @@ class PolyBus {
       switch (busType) {
         case TYPE_WS2812_1CH_X3:
         case TYPE_WS2812_2CH_X3:
+        case TYPE_GOVEE_BULB_CCT:
+        case TYPE_GOVEE_BULB_WW:
         case TYPE_WS2812_RGB:
         case TYPE_WS2812_WWA:
           return I_32_RN_NEO_3 + offset;
